@@ -153,6 +153,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         from superset.queries.saved_queries.api import SavedQueryRestApi
         from superset.reports.api import ReportScheduleRestApi
         from superset.reports.logs.api import ReportExecutionLogRestApi
+        from superset.scheduler.api import SchedulerRestApi
         from superset.row_level_security.api import RLSRestApi
         from superset.security.api import RoleRestAPI, SecurityRestApi
         from superset.sqllab.api import SqlLabRestApi
@@ -225,6 +226,7 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
         appbuilder.add_api(SqlLabRestApi)
         appbuilder.add_api(SqlLabPermalinkRestApi)
         appbuilder.add_api(LogRestApi)
+        appbuilder.add_api(SchedulerRestApi)
         #
         # Setup regular views
         #
