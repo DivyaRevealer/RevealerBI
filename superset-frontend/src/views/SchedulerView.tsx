@@ -1,8 +1,10 @@
 import { useState } from 'react';
-import { t, styled } from '@superset-ui/core';
+//import { t, styled } from '@superset-ui/core';
+import { t, styled, SupersetClient } from '@superset-ui/core';
 import { Input, TextArea } from 'src/components/Input';
 import { CronPicker } from 'src/components/CronPicker';
 import Button from 'src/components/Button';
+import withToasts, { ToastProps } from 'src/components/MessageToasts/withToasts';
 
 const Container = styled.div`
   margin: ${({ theme }) => theme.gridUnit * 4}px;
@@ -18,17 +20,30 @@ const Field = styled.div`
   }
 `;
 
-export default function SchedulerView() {
+//export default function SchedulerView() {
+function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
   const [dashboardId, setDashboardId] = useState('');
   const [sqlQuery, setSqlQuery] = useState('');
   const [databaseId, setDatabaseId] = useState('');
   const [schema, setSchema] = useState('');
   const [schedule, setSchedule] = useState('0 0 * * *');
 
-  const handleSubmit = () => {
-    // placeholder submit handler
-    // eslint-disable-next-line no-console
-    console.log({ dashboardId, sqlQuery, databaseId, schema, schedule });
+  const handleSubmit = async () => {
+    try {
+      await SupersetClient.post({
+        endpoint: '/api/v1/scheduler/jobs',
+        jsonPayload: {
+          dashboard_id: dashboardId,
+          sql: sqlQuery,
+          database_id: databaseId,
+          schema,
+          schedule,
+        },
+      });
+      addSuccessToast(t('Job saved'));
+    } catch (error) {
+      addDangerToast(t('Error saving job'));
+    }
   };
 
   return (
@@ -64,3 +79,6 @@ export default function SchedulerView() {
     </Container>
   );
 }
+}
+
+export default withToasts(SchedulerView);
