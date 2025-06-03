@@ -37,7 +37,8 @@ test('saves a job and shows success toast', async () => {
     expect(fetchMock.calls(endpoint)).toHaveLength(1);
   });
 
-  const [url, opts] = fetchMock.lastCall(endpoint) as [string, RequestInit];
+  //const [url, opts] = fetchMock.lastCall(endpoint) as [string, RequestInit];
+   const [, opts] = fetchMock.lastCall(endpoint) as [string, RequestInit];
   expect(JSON.parse(opts.body as string)).toEqual({
     dashboard_id: '10',
     sql: 'select 1',
