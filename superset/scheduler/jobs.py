@@ -16,15 +16,14 @@ def run_jobs() -> None:
     with open(JOBS_FILE) as handle:
 
     token = login_superset()
-    for job in jobs:
+    for job in jobs.values():
         refresh_dashboard(job["dashboard_id"], token)
         if "sql" in job:
             run_sql_query(job, token)
 
 
 def start_scheduler() -> BackgroundScheduler:
-        """Start the APScheduler background scheduler with a persistent job store."""
-     """Start the APScheduler background scheduler with a persistent job store."""
+    """Start the APScheduler background scheduler with a persistent job store."""
     jobstore_url = os.environ.get(
         "SCHEDULER_JOBSTORE_URL", "sqlite:///scheduler_jobs.sqlite"
     )
