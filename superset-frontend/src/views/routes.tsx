@@ -141,6 +141,13 @@ const ActionLogList: LazyExoticComponent<any> = lazy(
   () => import(/* webpackChunkName: "ActionLogList" */ 'src/pages/ActionLog'),
 );
 
+const SchedulerView = lazy(
+  () =>
+    import(
+      /* webpackChunkName: "SchedulerView" */ 'src/views/SchedulerView'
+    ),
+);
+
 type Routes = {
   path: string;
   Component: ComponentType;
@@ -246,6 +253,10 @@ export const routes: Routes = [
   {
     path: '/actionlog/list',
     Component: ActionLogList,
+  },
+  {
+    path: '/scheduler',
+    Component: SchedulerView,
   },
 ];
 

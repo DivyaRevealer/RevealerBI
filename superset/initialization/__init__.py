@@ -369,6 +369,15 @@ class SupersetAppInitializer:  # pylint: disable=too-many-public-methods
             category="SQL Lab",
             category_label=__("SQL Lab"),
         )
+        appbuilder.add_link(
+            "Scheduler",
+            label=__("Scheduler"),
+            href=f"{app_root}/scheduler",
+            icon="fa-clock",
+            category="Manage",
+            category_label=__("Manage"),
+        )
+        
         appbuilder.add_view(
             TagModelView,
             "Tags",
