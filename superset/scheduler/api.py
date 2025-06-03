@@ -1,6 +1,7 @@
 from __future__ import annotations
-
+import json
 import logging
+import os
 from uuid import uuid4
 
 from flask import request, Response
@@ -11,7 +12,13 @@ from superset.views.base_api import BaseSupersetApi
 logger = logging.getLogger(__name__)
 
 # simple in-memory store for scheduled jobs
-scheduled_jobs: dict[str, dict] = {}
+JOBS_FILE = os.environ.get("SCHEDULER_JOBS_FILE", "/app/scheduler_jobs.json")
+
+try:
+    with open(JOBS_FILE) as handle:
+        scheduled_jobs: dict[str, dict] = json.load(handle)
+except Exception:
+    scheduled_jobs: dict[str, dict] = {}
 
 
 class SchedulerRestApi(BaseSupersetApi):
@@ -35,6 +42,8 @@ class SchedulerRestApi(BaseSupersetApi):
         job_id = str(uuid4())
         job = {"id": job_id, **payload}
         scheduled_jobs[job_id] = job
+        with open(JOBS_FILE, "w") as handle:
+        json.dump(scheduled_jobs, handle)
         logger.info("Saved scheduler job %s", job_id)
         return self.response(201, result=job)
 
@@ -46,5 +55,7 @@ class SchedulerRestApi(BaseSupersetApi):
         if job_id not in scheduled_jobs:
             return self.response_404()
         scheduled_jobs.pop(job_id, None)
+        with open(JOBS_FILE, "w") as handle:
+        json.dump(scheduled_jobs, handle)
         logger.info("Deleted scheduler job %s", job_id)
         return self.response(200, message="Deleted")

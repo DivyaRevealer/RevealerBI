@@ -27,6 +27,7 @@ async_timeout>=4.0.0,<5.0.0
 # Known issue with 6.7.0 breaking a unit test, probably easy to fix, but will require
 # a bit of attention to bump.
 apispec>=6.0.0,<6.7.0
+apscheduler>=3.10.4
 
 # 1.4.1 appears to use much more memory, where the python test suite runs out of memory
 # causing CI to fail. 1.4.0 is the last version that works.

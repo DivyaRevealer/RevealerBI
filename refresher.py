@@ -38,5 +38,7 @@ def run_sql_query(job: Dict[str, Any], token: str) -> None:
     if "database_id" in job:
         payload["database_id"] = job["database_id"]
     headers = {"Authorization": f"Bearer {token}"}
-    resp = requests.post(f"{url}/api/v1/sql/execute", json=payload, headers=headers, timeout=30)
+    resp = requests.post(
+        f"{url}/api/v1/sql/execute", json=payload, headers=headers, timeout=30
+    )
     resp.raise_for_status()

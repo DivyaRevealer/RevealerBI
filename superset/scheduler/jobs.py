@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import json
 import time
+import os
 
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
 
 from refresher import login_superset, refresh_dashboard, run_sql_query
@@ -21,8 +23,13 @@ def run_jobs() -> None:
 
 
 def start_scheduler() -> BackgroundScheduler:
-    """Start the APScheduler background scheduler."""
-    scheduler = BackgroundScheduler()
+        """Start the APScheduler background scheduler with a persistent job store."""
+    jobstore_url = os.environ.get(
+        "SCHEDULER_JOBSTORE_URL", "sqlite:///scheduler_jobs.sqlite"
+    )
+    scheduler = BackgroundScheduler(
+        jobstores={"default": SQLAlchemyJobStore(url=jobstore_url)}
+    )
     scheduler.add_job(run_jobs, "cron", hour=7, minute=0)
     scheduler.start()
     return scheduler
