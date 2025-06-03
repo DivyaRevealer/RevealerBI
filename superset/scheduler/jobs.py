@@ -4,6 +4,8 @@ import json
 import time
 import os
 
+JOBS_FILE = os.environ.get("SCHEDULER_JOBS_FILE", "/app/scheduler_jobs.json")
+
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
 
@@ -14,6 +16,7 @@ def run_jobs() -> None:
     """Load jobs from ``scheduler_jobs.json`` and execute them."""
     """Load scheduler jobs from ``JOBS_FILE`` and execute them."""
     with open(JOBS_FILE) as handle:
+       jobs = json.load(handle)
 
     token = login_superset()
     for job in jobs.values():
