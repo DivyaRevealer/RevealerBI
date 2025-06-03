@@ -1,6 +1,13 @@
 import fetchMock from 'fetch-mock';
 import { t } from '@superset-ui/core';
 import { render, screen, waitFor, userEvent } from 'spec/helpers/testing-library';
+
+jest.mock('src/components/MessageToasts/withToasts', () => ({
+  __esModule: true,
+  default: (component: React.ComponentType) => component,
+}));
+
+
 import SchedulerView from 'src/views/SchedulerView';
 
 const endpoint = '/api/v1/scheduler/jobs';

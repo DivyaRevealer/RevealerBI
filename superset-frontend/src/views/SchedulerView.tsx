@@ -51,11 +51,16 @@ function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
       <h2>{t('Scheduler')}</h2>
       <Field>
         <div className="control-label">{t('Dashboard ID')}</div>
-        <Input value={dashboardId} onChange={e => setDashboardId(e.target.value)} />
+         <Input
+          aria-label={t('Dashboard ID')}
+          value={dashboardId}
+          onChange={e => setDashboardId(e.target.value)}
+        />
       </Field>
       <Field>
         <div className="control-label">{t('SQL Query')}</div>
         <TextArea
+		  aria-label={t('SQL Query')}
           rows={4}
           value={sqlQuery}
           onChange={e => setSqlQuery(e.target.value)}
@@ -63,15 +68,28 @@ function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
       </Field>
       <Field>
         <div className="control-label">{t('Database ID')}</div>
-        <Input value={databaseId} onChange={e => setDatabaseId(e.target.value)} />
+	    <Input
+		  aria-label={t('Database ID')}
+		  value={databaseId}
+		  onChange={e => setDatabaseId(e.target.value)}
+		/>
       </Field>
       <Field>
         <div className="control-label">{t('Schema')}</div>
-        <Input value={schema} onChange={e => setSchema(e.target.value)} />
+        <Input
+          aria-label={t('Schema')}
+          value={schema}
+          onChange={e => setSchema(e.target.value)}
+        />
       </Field>
       <Field>
         <div className="control-label">{t('Schedule time')}</div>
-        <CronPicker clearButton={false} value={schedule} setValue={setSchedule} />
+        <CronPicker
+          aria-label={t('Schedule time')}
+          clearButton={false}
+          value={schedule}
+          setValue={setSchedule}
+        />
       </Field>
       <Button buttonStyle="primary" onClick={handleSubmit}>
         {t('Save')}
