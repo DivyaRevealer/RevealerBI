@@ -111,6 +111,71 @@ SQLLAB_CTAS_NO_LIMIT = True
 log_level_text = os.getenv("SUPERSET_LOG_LEVEL", "INFO")
 LOG_LEVEL = getattr(logging, log_level_text.upper(), logging.INFO)
 
+
+# Configuration for scheduling SQL Lab queries as reports.
+SCHEDULED_QUERIES = {
+    "JSONSCHEMA": {
+        "title": "Schedule",
+        "description": (
+            "In order to schedule a query, you need to specify when it "
+            "should start running, when it should stop running, and how "
+            "often it should run. You can also optionally specify "
+            "dependencies that should be met before the query is "
+            "executed. Please read the documentation for best practices "
+            "and more information on how to specify dependencies."
+        ),
+        "type": "object",
+        "properties": {
+            "output_table": {
+                "type": "string",
+                "title": "Output table name",
+            },
+            "start_date": {
+                "type": "string",
+                "title": "Start date",
+                "format": "date-time",
+                "default": "tomorrow at 9am",
+            },
+            "end_date": {
+                "type": "string",
+                "title": "End date",
+                "format": "date-time",
+                "default": "9am in 30 days",
+            },
+            "schedule_interval": {
+                "type": "string",
+                "title": "Schedule interval",
+            },
+            "dependencies": {
+                "type": "array",
+                "title": "Dependencies",
+                "items": {"type": "string"},
+            },
+        },
+    },
+    "UISCHEMA": {
+        "schedule_interval": {"ui:placeholder": "@daily, @weekly, etc."},
+        "dependencies": {
+            "ui:help": (
+                "Check the documentation for the correct format when "
+                "defining dependencies."
+            ),
+        },
+    },
+    "VALIDATION": [
+        {
+            "name": "less_equal",
+            "arguments": ["start_date", "end_date"],
+            "message": "End date cannot be before start date",
+            "container": "end_date",
+        }
+    ],
+    "linkback": (
+        "https://airflow.example.com/admin/airflow/tree?"
+        "dag_id=query_${id}_${extra_json.schedule_info.output_table}"
+    ),
+}
+
 if os.getenv("CYPRESS_CONFIG") == "true":
     # When running the service as a cypress backend, we need to import the config
     # located @ tests/integration_tests/superset_test_config.py
