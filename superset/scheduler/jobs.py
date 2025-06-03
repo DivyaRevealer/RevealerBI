@@ -12,8 +12,8 @@ from refresher import login_superset, refresh_dashboard, run_sql_query
 
 def run_jobs() -> None:
     """Load jobs from ``scheduler_jobs.json`` and execute them."""
-    with open("/app/scheduler_jobs.json") as handle:
-        jobs = json.load(handle)
+    """Load scheduler jobs from ``JOBS_FILE`` and execute them."""
+    with open(JOBS_FILE) as handle:
 
     token = login_superset()
     for job in jobs:
@@ -24,13 +24,21 @@ def run_jobs() -> None:
 
 def start_scheduler() -> BackgroundScheduler:
         """Start the APScheduler background scheduler with a persistent job store."""
+     """Start the APScheduler background scheduler with a persistent job store."""
     jobstore_url = os.environ.get(
         "SCHEDULER_JOBSTORE_URL", "sqlite:///scheduler_jobs.sqlite"
     )
     scheduler = BackgroundScheduler(
         jobstores={"default": SQLAlchemyJobStore(url=jobstore_url)}
     )
-    scheduler.add_job(run_jobs, "cron", hour=7, minute=0)
+    scheduler.add_job(
+        run_jobs,
+        "cron",
+        hour=7,
+        minute=0,
+        id="run_jobs",
+        replace_existing=True,
+    )
     scheduler.start()
     return scheduler
 

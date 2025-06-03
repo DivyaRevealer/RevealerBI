@@ -43,7 +43,7 @@ class SchedulerRestApi(BaseSupersetApi):
         job = {"id": job_id, **payload}
         scheduled_jobs[job_id] = job
         with open(JOBS_FILE, "w") as handle:
-        json.dump(scheduled_jobs, handle)
+            json.dump(scheduled_jobs, handle)
         logger.info("Saved scheduler job %s", job_id)
         return self.response(201, result=job)
 
@@ -56,6 +56,6 @@ class SchedulerRestApi(BaseSupersetApi):
             return self.response_404()
         scheduled_jobs.pop(job_id, None)
         with open(JOBS_FILE, "w") as handle:
-        json.dump(scheduled_jobs, handle)
+            json.dump(scheduled_jobs, handle)
         logger.info("Deleted scheduler job %s", job_id)
         return self.response(200, message="Deleted")
