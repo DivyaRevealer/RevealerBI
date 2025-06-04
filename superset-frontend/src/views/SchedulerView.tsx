@@ -22,9 +22,11 @@ const Field = styled.div`
 
 //export default function SchedulerView() {
 function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
-  const [dashboardId, setDashboardId] = useState('');
+  //const [dashboardId, setDashboardId] = useState('');
+  const [dashboardName, setDashboardName] = useState('');
   const [sqlQuery, setSqlQuery] = useState('');
-  const [databaseId, setDatabaseId] = useState('');
+  //const [databaseId, setDatabaseId] = useState('');
+  const [databaseName, setDatabaseName] = useState('');
   const [schema, setSchema] = useState('');
   const [schedule, setSchedule] = useState('0 0 * * *');
 
@@ -33,9 +35,11 @@ function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
       await SupersetClient.post({
         endpoint: '/api/v1/scheduler/jobs',
         jsonPayload: {
-          dashboard_id: dashboardId,
+          //dashboard_id: dashboardId,
+		  dashboard_name: dashboardName,
           sql: sqlQuery,
-          database_id: databaseId,
+          //database_id: databaseId,
+		  database_name: databaseName,
           schema,
           schedule,
         },
@@ -50,11 +54,11 @@ function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
     <Container>
       <h2>{t('Scheduler')}</h2>
       <Field>
-        <div className="control-label">{t('Dashboard ID')}</div>
+       <div className="control-label">{t('Dashboard Name')}</div>
          <Input
-          aria-label={t('Dashboard ID')}
-          value={dashboardId}
-          onChange={e => setDashboardId(e.target.value)}
+		  aria-label={t('Dashboard Name')}
+          value={dashboardName}
+          onChange={e => setDashboardName(e.target.value)}
         />
       </Field>
       <Field>
@@ -67,12 +71,12 @@ function SchedulerView({ addSuccessToast, addDangerToast }: ToastProps) {
         />
       </Field>
       <Field>
-        <div className="control-label">{t('Database ID')}</div>
-	    <Input
-		  aria-label={t('Database ID')}
-		  value={databaseId}
-		  onChange={e => setDatabaseId(e.target.value)}
-		/>
+        <div className="control-label">{t('Database Name')}</div>
+            <Input
+                  aria-label={t('Database Name')}
+                  value={databaseName}
+                  onChange={e => setDatabaseName(e.target.value)}
+			/>
       </Field>
       <Field>
         <div className="control-label">{t('Schema')}</div>

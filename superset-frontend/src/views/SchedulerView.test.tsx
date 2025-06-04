@@ -26,9 +26,11 @@ test('saves a job and shows success toast', async () => {
   fetchMock.post(endpoint, {});
   render(<SchedulerView {...mockedProps} />, { useRedux: true });
 
-  userEvent.type(screen.getByLabelText('Dashboard ID'), '10');
+  //userEvent.type(screen.getByLabelText('Dashboard ID'), '10');
+  userEvent.type(screen.getByLabelText('Dashboard Name'), 'Sales Dashboard');
   userEvent.type(screen.getByLabelText('SQL Query'), 'select 1');
-  userEvent.type(screen.getByLabelText('Database ID'), '1');
+  //userEvent.type(screen.getByLabelText('Database ID'), '1');
+  userEvent.type(screen.getByLabelText('Database Name'), 'main');
   userEvent.type(screen.getByLabelText('Schema'), 'public');
 
   userEvent.click(screen.getByText('Save'));
@@ -40,9 +42,10 @@ test('saves a job and shows success toast', async () => {
   //const [url, opts] = fetchMock.lastCall(endpoint) as [string, RequestInit];
    const [, opts] = fetchMock.lastCall(endpoint) as [string, RequestInit];
   expect(JSON.parse(opts.body as string)).toEqual({
-    dashboard_id: '10',
+	dashboard_name: 'Sales Dashboard',
     sql: 'select 1',
-    database_id: '1',
+    //database_id: '1',
+	database_name: 'main',
     schema: 'public',
     schedule: '0 0 * * *',
   });
