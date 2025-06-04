@@ -7,18 +7,6 @@ jest.mock('src/components/MessageToasts/withToasts', () => ({
   default: (component: React.ComponentType) => component,
 }));
 
-jest.mock('src/components/Select/AsyncSelect', () =>
-  ({ onChange, ...props }: any) => (
-    <input
-      data-test={props['data-test']}
-      aria-label={props.ariaLabel}
-      onChange={({ target: { value } }) =>
-        onChange({ label: value, value })
-      }
-    />
-  ),
-);
-
 
 import SchedulerView from 'src/views/SchedulerView';
 
@@ -38,11 +26,9 @@ test('saves a job and shows success toast', async () => {
   fetchMock.post(endpoint, {});
   render(<SchedulerView {...mockedProps} />, { useRedux: true });
 
-  //userEvent.type(screen.getByLabelText('Dashboard ID'), '10');
-  userEvent.type(screen.getByTestId('dashboard-select'), '10');
+  userEvent.type(screen.getByLabelText('Dashboard ID'), '10');
   userEvent.type(screen.getByLabelText('SQL Query'), 'select 1');
-  //userEvent.type(screen.getByLabelText('Database ID'), '1');
-  userEvent.type(screen.getByTestId('database-select'), '1');
+  userEvent.type(screen.getByLabelText('Database ID'), '1');
   userEvent.type(screen.getByLabelText('Schema'), 'public');
 
   userEvent.click(screen.getByText('Save'));
@@ -62,4 +48,3 @@ test('saves a job and shows success toast', async () => {
   });
   expect(mockedProps.addSuccessToast).toHaveBeenCalledWith(t('Job saved'));
 });
-
