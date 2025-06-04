@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 # simple in-memory store for scheduled jobs
 JOBS_FILE = os.environ.get("SCHEDULER_JOBS_FILE", "/app/scheduler_jobs.json")
+os.makedirs(os.path.dirname(JOBS_FILE), exist_ok=True)
 
 try:
     with open(JOBS_FILE) as handle:
