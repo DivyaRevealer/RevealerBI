@@ -27,7 +27,9 @@ def run_jobs() -> None:
 
     token = login_superset()
     for job in jobs.values():
-        refresh_dashboard(job["dashboard_id"], token)
+        dashboard = job.get("dashboard_id") or job.get("dashboard_name")
+        if dashboard:
+            refresh_dashboard(dashboard, token)
         if "sql" in job:
             run_sql_query(job, token)
 
@@ -43,8 +45,8 @@ def start_scheduler() -> BackgroundScheduler:
     scheduler.add_job(
         run_jobs,
         "cron",
-        hour=7,
-        minute=0,
+        hour=19,
+        minute=51,
         id="run_jobs",
         replace_existing=True,
     )
