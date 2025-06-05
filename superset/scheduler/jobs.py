@@ -45,8 +45,8 @@ def start_scheduler() -> BackgroundScheduler:
     scheduler.add_job(
         run_jobs,
         "cron",
-        hour=19,
-        minute=51,
+        hour=12,
+        minute=11,
         id="run_jobs",
         replace_existing=True,
     )
