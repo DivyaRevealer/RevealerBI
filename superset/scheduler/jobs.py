@@ -9,9 +9,11 @@ os.makedirs(os.path.dirname(JOBS_FILE), exist_ok=True)
 
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 from apscheduler.schedulers.background import BackgroundScheduler
+print("✅ Starting jobs.py")
 
-from refresher import login_superset, refresh_dashboard, run_sql_query
+from superset.scheduler.refresher import login_superset, refresh_dashboard, run_sql_query
 
+print("✅ Imported refresher functions")
 
 def run_jobs() -> None:
     """Load jobs from ``scheduler_jobs.json`` and execute them."""
@@ -26,12 +28,17 @@ def run_jobs() -> None:
 
 
     token = login_superset()
+    print("✅ Logged into Superset")
+
     for job in jobs.values():
         dashboard = job.get("dashboard_id") or job.get("dashboard_name")
         if dashboard:
             refresh_dashboard(dashboard, token)
+            print("✅ Dashboard refreshed")
+
         if "sql" in job:
             run_sql_query(job, token)
+            print("✅ SQL query executed")
 
 
 def start_scheduler() -> BackgroundScheduler:
