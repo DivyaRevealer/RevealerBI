@@ -7,11 +7,14 @@ from typing import Any, Dict
 
 
 def login_superset() -> str:
+    print("✅ inside  login_superset")
     """Authenticate with Superset and return a JWT access token."""
     url = os.environ.get("SUPERSET_URL", "http://localhost:8088")
+    print(url)
     username = os.environ.get("SUPERSET_USERNAME", "admin")
     password = os.environ.get("SUPERSET_PASSWORD", "admin")
-
+    print(username)
+    print(password)
     payload = {
         "username": username,
         "password": password,

@@ -18,6 +18,7 @@ print("✅ Imported refresher functions")
 def run_jobs() -> None:
     """Load jobs from ``scheduler_jobs.json`` and execute them."""
     """Load scheduler jobs from ``JOBS_FILE`` and execute them."""
+    print("✅ run_jobs")
     with open(JOBS_FILE) as handle:
        jobs = json.load(handle)
     if os.path.exists(JOBS_FILE):
@@ -26,7 +27,7 @@ def run_jobs() -> None:
     else:
         jobs = {}
 
-
+    print("✅ Before logging into Superset")
     token = login_superset()
     print("✅ Logged into Superset")
 
@@ -43,25 +44,28 @@ def run_jobs() -> None:
 
 def start_scheduler() -> BackgroundScheduler:
     """Start the APScheduler background scheduler with a persistent job store."""
+    print("✅ inside start_scheduler")
     jobstore_url = os.environ.get(
         "SCHEDULER_JOBSTORE_URL", "sqlite:///scheduler_jobs.sqlite"
     )
     scheduler = BackgroundScheduler(
         jobstores={"default": SQLAlchemyJobStore(url=jobstore_url)}
     )
+    print("✅ before add_job")
     scheduler.add_job(
         run_jobs,
         "cron",
-        hour=12,
-        minute=11,
+        hour=18,
+        minute=45,
         id="run_jobs",
         replace_existing=True,
     )
     scheduler.start()
     return scheduler
 
-
+print("✅ File loaded")
 if __name__ == "__main__":
+    print("✅ inside main")
     sched = start_scheduler()
     try:
         while True:
