@@ -59,7 +59,8 @@ def refresh_dashboard(dashboard: int | str, token: str) -> None:
         get_dashboard_id(dashboard, token) if isinstance(dashboard, str) else dashboard
     )
     try:
-        resp = requests.post(
+        #resp = requests.post(
+        resp = requests.put(
             f"{url}/api/v1/dashboard/{dashboard_id}/refresh", headers=headers, timeout=30
         )
         resp.raise_for_status()
