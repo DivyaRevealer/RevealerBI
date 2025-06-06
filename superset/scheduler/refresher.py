@@ -88,8 +88,32 @@ def refresh_dashboard(dashboard: int | str, session: Session) -> None:
             f"{url}/api/v1/dashboard/{dashboard_id}/refresh", timeout=30
         )
         resp.raise_for_status()
+        warm_up_charts(session, dashboard_id)
     except RequestException as exc:
         print(f"Failed to refresh dashboard {dashboard_id}: {exc}")
+        
+def warm_up_charts(session: Session, dashboard_id: int) -> None:
+    """Warm up all charts on a dashboard so UI reflects new data."""
+    url = os.environ.get("SUPERSET_URL", "http://localhost:8088")
+    try:
+        resp = session.get(f"{url}/api/v1/dashboard/{dashboard_id}/charts")
+        resp.raise_for_status()
+        charts = resp.json().get("result", [])
+        for chart in charts:
+            chart_id = chart.get("id") or chart.get("chart_id")
+            if not chart_id:
+                continue
+            try:
+                session.put(
+                    f"{url}/api/v1/chart/warm_up_cache",
+                    json={"chart_id": chart_id, "dashboard_id": dashboard_id},
+                    timeout=30,
+                )
+            except RequestException:
+                print(f"Failed to warm up chart {chart_id}")
+    except RequestException as exc:
+        print(f"Failed to load dashboard charts for {dashboard_id}: {exc}")
+
 
 
 #def run_sql_query(job: Dict[str, Any], token: str) -> None:
