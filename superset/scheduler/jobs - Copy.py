@@ -30,9 +30,8 @@ def run_jobs() -> None:
 
     print("✅ Before logging into Superset")
     token = login_superset()
-    session = login_superset()
     print("✅ Logged into Superset")
-    #print(token)
+    print(token)
 
     for job in jobs.values():
         print("inside for loop")
@@ -40,12 +39,10 @@ def run_jobs() -> None:
         print(dashboard)
         if dashboard:
             refresh_dashboard(dashboard, token)
-            refresh_dashboard(dashboard, session)
             print("✅ Dashboard refreshed")
 
         if "sql" in job:
             run_sql_query(job, token)
-            run_sql_query(job, session)
             print("✅ SQL query executed")
 
 
