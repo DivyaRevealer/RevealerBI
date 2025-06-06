@@ -73,6 +73,7 @@ services:
     volumes: *superset-volumes
     environment:
       SUPERSET_LOG_LEVEL: "${SUPERSET_LOG_LEVEL:-info}"
+      
 
   superset-init:
     container_name: superset_init
