@@ -27,6 +27,7 @@ from superset.commands.exceptions import (
     ImportFailedError,
     ObjectNotFoundError,
     UpdateFailedError,
+    CommandException,
 )
 
 
@@ -100,3 +101,7 @@ class DashboardFaveError(CommandInvalidError):
 
 class DashboardUnfaveError(CommandInvalidError):
     message = _("Dashboard cannot be unfavorited.")
+    
+class WarmUpCacheDashboardNotFoundError(CommandException):
+    status = 404
+    message = _("Dashboard not found")

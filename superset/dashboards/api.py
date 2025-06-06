@@ -61,6 +61,7 @@ from superset.commands.dashboard.update import (
     UpdateDashboardCommand,
     UpdateDashboardNativeFiltersCommand,
 )
+from superset.commands.dashboard.warm_up_cache import DashboardWarmUpCacheCommand
 from superset.commands.database.exceptions import DatasetValidationError
 from superset.commands.exceptions import TagForbiddenError
 from superset.commands.importers.exceptions import NoValidFilesFoundError
@@ -177,6 +178,7 @@ class DashboardRestApi(BaseSupersetModelRestApi):
         "delete_embedded",
         "thumbnail",
         "copy_dash",
+        "refresh",
         "cache_dashboard_screenshot",
         "screenshot",
         "put_filters",
@@ -1828,3 +1830,17 @@ class DashboardRestApi(BaseSupersetModelRestApi):
                 ).timestamp(),
             },
         )
+        
+    @expose("/<id_or_slug>/refresh", methods=("PUT",))
+    @protect()
+    @safe
+    @statsd_metrics
+    @event_logger.log_this_with_context(
+        action=lambda self, *args, **kwargs: f"{self.__class__.__name__}.refresh",
+        log_to_statsd=False,
+    )
+    @with_dashboard
+    def refresh(self, dashboard: Dashboard) -> Response:
+        """Refresh dashboard charts by warming up the cache."""
+        result = DashboardWarmUpCacheCommand(dashboard).run()
+        return self.response(200, result=result)
