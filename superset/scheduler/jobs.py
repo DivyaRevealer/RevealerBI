@@ -16,16 +16,17 @@ from superset.scheduler.refresher import login_superset, refresh_dashboard, run_
 print("✅ Imported refresher functions")
 
 def run_jobs() -> None:
-    """Load jobs from ``scheduler_jobs.json`` and execute them."""
+    
     """Load scheduler jobs from ``JOBS_FILE`` and execute them."""
     print("✅ run_jobs")
-    with open(JOBS_FILE) as handle:
-       jobs = json.load(handle)
+    #with open(JOBS_FILE) as handle:
+     #  jobs = json.load(handle)
+    jobs: dict[str, dict] = {}
     if os.path.exists(JOBS_FILE):
         with open(JOBS_FILE) as handle:
             jobs = json.load(handle)
-    else:
-        jobs = {}
+    #else:
+     #   jobs = {}
 
     print("✅ Before logging into Superset")
     token = login_superset()
@@ -33,6 +34,7 @@ def run_jobs() -> None:
     print(token)
 
     for job in jobs.values():
+        print("inside for loop")
         dashboard = job.get("dashboard_id") or job.get("dashboard_name")
         print(dashboard)
         if dashboard:

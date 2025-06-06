@@ -4,6 +4,7 @@ import json
 import os
 import requests
 from typing import Any, Dict
+from requests import RequestException
 
 
 def login_superset() -> str:
@@ -57,10 +58,13 @@ def refresh_dashboard(dashboard: int | str, token: str) -> None:
     dashboard_id = (
         get_dashboard_id(dashboard, token) if isinstance(dashboard, str) else dashboard
     )
-    resp = requests.post(
-        f"{url}/api/v1/dashboard/{dashboard_id}/refresh", headers=headers, timeout=30
-    )
-    resp.raise_for_status()
+    try:
+        resp = requests.post(
+            f"{url}/api/v1/dashboard/{dashboard_id}/refresh", headers=headers, timeout=30
+        )
+        resp.raise_for_status()
+    except RequestException as exc:
+        print(f"Failed to refresh dashboard {dashboard_id}: {exc}")
 
 
 def run_sql_query(job: Dict[str, Any], token: str) -> None:
@@ -72,7 +76,10 @@ def run_sql_query(job: Dict[str, Any], token: str) -> None:
     elif "database_name" in job:
         payload["database_id"] = get_database_id(job["database_name"], token)
     headers = {"Authorization": f"Bearer {token}"}
-    resp = requests.post(
-        f"{url}/api/v1/sql/execute", json=payload, headers=headers, timeout=30
-    )
-    resp.raise_for_status()
+    try:
+        resp = requests.post(
+            f"{url}/api/v1/sql/execute", json=payload, headers=headers, timeout=30
+        )
+        resp.raise_for_status()
+    except RequestException as exc:
+        print(f"Failed to execute SQL job: {exc}")
